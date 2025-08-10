@@ -22,6 +22,10 @@ docker build -t $DockerUsername/california-housing-ml-ui:latest -f Dockerfile.ui
 Write-Host "Pushing API Docker image to Docker Hub..." -ForegroundColor Cyan
 docker push $DockerUsername/california-housing-ml-api:latest
 
+
+Write-Host "Building custom MLflow Docker image..." -ForegroundColor Cyan
+docker build -t custom-mlflow:latest -f Dockerfile.mlflow .
+
 Write-Host "Pushing UI Docker image to Docker Hub..." -ForegroundColor Cyan
 docker push $DockerUsername/california-housing-ml-ui:latest
 
@@ -29,8 +33,9 @@ Write-Host "Pulling latest images from Docker Hub..." -ForegroundColor Cyan
 $env:DOCKER_USERNAME = $DockerUsername
 docker-compose pull
 
-Write-Host "Starting all services..." -ForegroundColor Green
+
+Write-Host "Starting all services (with build)..." -ForegroundColor Green
 $env:DOCKER_USERNAME = $DockerUsername
-docker-compose up -d
+docker-compose up --build -d
 
 Write-Host "Deployment complete!" -ForegroundColor Green
