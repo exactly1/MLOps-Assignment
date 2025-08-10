@@ -14,8 +14,18 @@ from datetime import datetime
 from typing import List, Dict, Any
 import mlflow
 import mlflow.sklearn
+import os
 from fastapi.responses import Response
 import uvicorn
+
+def get_mlflow_tracking_uri():
+    uri = os.environ.get("MLFLOW_TRACKING_URI", None)
+    if uri is None:
+        import yaml
+        with open("params.yaml", "r") as f:
+            params = yaml.safe_load(f)
+        uri = params.get("training", {}).get("mlflow_tracking_uri", "postgresql://mlflow:mlflow@postgres:5432/mlflow")
+    return uri
 
 # Set up logging
 logging.basicConfig(
@@ -28,6 +38,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+mlflow.set_tracking_uri(get_mlflow_tracking_uri())
 # Prometheus metrics (optional)
 try:
     from prometheus_client import Counter, Histogram, generate_latest, REGISTRY

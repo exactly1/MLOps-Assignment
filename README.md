@@ -1,60 +1,78 @@
+
 # MLOps Pipeline - California Housing Price Prediction
 
-A complete MLOps pipeline for predicting California housing prices using best practices including experiment tracking, containerization, CI/CD, and monitoring.
+This repository contains a complete MLOps pipeline for predicting California housing prices, featuring modular code, experiment tracking, containerized API and UI, CI/CD, and robust monitoring.
+
 
 ## 🏗️ Architecture Overview
 
-This project implements a complete MLOps pipeline with the following components:
+**Key Components:**
+- **Data Processing**: Preprocessing and feature engineering (`src/data/data_processor.py`)
+- **Model Training & Evaluation**: Multiple models, tracked with MLflow (`src/models/train.py`, `src/models/evaluate.py`)
+- **API Service**: FastAPI for serving predictions (`src/api/main.py`)
+- **Monitoring**: Logging, metrics, Prometheus integration (`src/monitoring/monitor.py`)
+- **UI**: Streamlit dashboard for visualization (`src/ui/streamlit_app.py`)
+- **Containerization**: Docker & Docker Compose for deployment
+- **CI/CD**: GitHub Actions (if configured)
 
-- **Data Versioning**: (none)
-- **Experiment Tracking**: MLflow for model versioning and metrics
-- **API Service**: FastAPI for model serving
-- **Containerization**: Docker for deployment
-- **CI/CD**: GitHub Actions for automated testing and deployment
-- **Monitoring**: Logging, metrics, and optional Prometheus integration
 
 ## 📁 Project Structure
 
 ```
-├── data/                    # Dataset storage
-├── models/                  # Trained model artifacts
-├── src/                     # Source code
-│   ├── data/               # Data processing
-│   ├── models/             # Model training
-│   ├── api/                # API service
-│   └── monitoring/         # Logging and metrics
-├── tests/                   # Unit tests
-├── docker/                 # Docker configurations
-├── .github/workflows/      # CI/CD pipelines
-├── notebooks/              # Exploratory analysis
-├── requirements.txt        # Python dependencies
-├── Dockerfile             # Container definition
-└── docker-compose.yml     # Multi-service orchestration
+├── data/                  # Raw and processed datasets
+├── exports/               # Exported artifacts
+├── logs/                  # API and monitoring logs, predictions DB
+├── models/                # Trained model artifacts (joblib, scaler)
+├── mlruns/                # MLflow experiment tracking
+├── src/
+│   ├── api/               # FastAPI app
+│   ├── data/              # Data processing scripts
+│   ├── models/            # Training & evaluation
+│   ├── monitoring/        # Monitoring utilities
+│   └── ui/                # Streamlit dashboard
+├── tests/                 # Unit tests
+├── Dockerfile.api         # API Dockerfile
+├── Dockerfile.ui          # UI Dockerfile
+├── docker-compose.yml     # Multi-service orchestration
+├── requirements.txt       # Python dependencies
+├── run_api.py             # API runner script
+├── show_monitoring.py     # Monitoring dashboard runner
+└── ... (other configs)
 ```
+
 
 ## 🚀 Quick Start
 
-1. **Clone and Setup**
-   ```bash
-   git clone <repository-url>
-   cd MLOps Assignment
+1. **Install dependencies**
+   ```powershell
    pip install -r requirements.txt
    ```
 
-2. **Train Models**
-   ```bash
+2. **Train models**
+   ```powershell
    python src/models/train.py
    ```
 
-3. **Start API Service**
-   ```bash
-   python src/api/main.py
+3. **Run API service**
+   ```powershell
+   python run_api.py
    ```
 
-4. **Docker Deployment**
-   ```bash
+4. **Run Streamlit UI**
+   ```powershell
+   python src/ui/streamlit_app.py
+   ```
+
+5. **Monitoring Dashboard**
+   ```powershell
+   python show_monitoring.py
+   ```
+
+6. **Docker Deployment**
+   ```powershell
    docker-compose up --build
    ```
+
 
 ## 📊 Model Performance
 
@@ -64,24 +82,29 @@ This project implements a complete MLOps pipeline with the following components:
 | Random Forest | 0.526 | 0.795 | 2.45s |
 | Gradient Boosting | 0.498 | 0.821 | 5.32s |
 
+
 ## 🔍 API Endpoints
 
-- `POST /predict` - Make housing price predictions
-- `GET /health` - Health check
-- `GET /metrics` - Prometheus metrics (if enabled)
-- `GET /model/info` - Current model information
+- `POST /predict` — Predict housing prices
+- `GET /health` — Health check
+- `GET /metrics` — Prometheus metrics (if enabled)
+- `GET /model/info` — Current model info
 
-## 📈 Monitoring
 
-- Request/response logging to files and SQLite
-- Performance metrics tracking
-- Optional Prometheus integration for dashboards
+## 📈 Monitoring & Logging
+
+- Request/response logging to `logs/`
+- Prediction and model monitoring in `logs/predictions.db` and `logs/model_monitor.log`
+- Prometheus metrics endpoint for integration
+- Monitoring dashboard via `show_monitoring.py`
+
 
 ## 🧪 Testing
 
-```bash
+```powershell
 pytest tests/
 ```
+
 
 ## 📝 License
 

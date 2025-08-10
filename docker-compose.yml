@@ -1,10 +1,37 @@
-
 services:
+  postgres:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: mlflow
+      POSTGRES_PASSWORD: mlflow
+      POSTGRES_DB: mlflow
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  mlflow:
+    build:
+      context: .
+      dockerfile: Dockerfile.mlflow
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+    environment:
+      - MLFLOW_TRACKING_URI=postgresql://mlflow:mlflow@postgres:5432/mlflow
+    command: >
+      mlflow server
+      --backend-store-uri postgresql://mlflow:mlflow@postgres:5432/mlflow
+      --default-artifact-root /mlflow/mlruns
+      --host 0.0.0.0
+      --port 5000
+    volumes:
+      - ./mlflow_data:/mlflow
+
   ml-api:
     image: ${DOCKER_USERNAME}/california-housing-ml-api:latest
-    # To build and push images, use CI/CD or:
-    # docker build -t ${DOCKER_USERNAME}/california-housing-ml-api:latest -f Dockerfile.api .
-    # docker push ${DOCKER_USERNAME}/california-housing-ml-api:latest
     ports:
       - "8000:8000"
     volumes:
@@ -13,7 +40,7 @@ services:
       - ./exports:/app/exports
     environment:
       - PYTHONPATH=/app
-      - MLFLOW_TRACKING_URI=sqlite:///mlflow.db
+      - MLFLOW_TRACKING_URI=postgresql://mlflow:mlflow@postgres:5432/mlflow
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
@@ -23,29 +50,12 @@ services:
 
   streamlit:
     image: ${DOCKER_USERNAME}/california-housing-ml-ui:latest
-    # To build and push images, use CI/CD or:
-    # docker build -t ${DOCKER_USERNAME}/california-housing-ml-ui:latest -f Dockerfile.ui .
-    # docker push ${DOCKER_USERNAME}/california-housing-ml-ui:latest
-    # docker-compose pull
-    # docker-compose up -d
     ports:
       - "8501:8501"
     depends_on:
       - ml-api
     environment:
       - PYTHONPATH=/app
-
-  mlflow:
-    image: python:3.13-slim
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./mlruns:/mlflow/mlruns
-      - ./mlflow.db:/mlflow/mlflow.db
-    command: >
-      bash -c "pip install mlflow && \
-               mlflow server --host 0.0.0.0 --port 5000 --backend-store-uri sqlite:///mlflow/mlflow.db --default-artifact-root /mlflow/mlruns"
-    
   prometheus:
     image: prom/prometheus:latest
     ports:
@@ -69,4 +79,6 @@ services:
       - grafana-storage:/var/lib/grafana
 
 volumes:
+  pgdata:
+  mlflow_data:
   grafana-storage:

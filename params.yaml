@@ -17,7 +17,7 @@ model_params:
 
 training:
   experiment_name: california_housing_prediction
-  mlflow_tracking_uri: sqlite:///mlflow.db
+  mlflow_tracking_uri: postgresql://mlflow:mlflow@postgres:5432/mlflow
 
 api:
   host: 0.0.0.0

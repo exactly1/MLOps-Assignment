@@ -4,6 +4,7 @@ Model training and experiment tracking with MLflow.
 
 import mlflow
 import mlflow.sklearn
+import os
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
@@ -29,11 +30,19 @@ class ModelTrainer:
     
     def __init__(self, experiment_name="california_housing_prediction"):
         self.experiment_name = experiment_name
-        self.setup_mlflow()
+    self.setup_mlflow()
         
     def setup_mlflow(self):
-        """Setup MLflow experiment."""
+        """Setup MLflow experiment and tracking URI."""
+        tracking_uri = os.environ.get("MLFLOW_TRACKING_URI", None)
+        if tracking_uri is None:
+            import yaml
+            with open("params.yaml", "r") as f:
+                params = yaml.safe_load(f)
+            tracking_uri = params.get("training", {}).get("mlflow_tracking_uri", "postgresql://mlflow:mlflow@postgres:5432/mlflow")
+        mlflow.set_tracking_uri(tracking_uri)
         mlflow.set_experiment(self.experiment_name)
+        logger.info(f"MLflow tracking URI set to: {tracking_uri}")
         logger.info(f"MLflow experiment set to: {self.experiment_name}")
     
     def get_models(self):

@@ -1,4 +1,3 @@
-
 # Core ML and Data Science
 scikit-learn
 pandas
@@ -44,3 +43,4 @@ python-dotenv
 click
 streamlit
 requests
+psycopg2-binary

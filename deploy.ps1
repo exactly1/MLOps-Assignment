@@ -5,6 +5,14 @@ param(
     [string]$DockerUsername = "your-docker-username"
 )
 
+Write-Host "Ensuring mlflow_data directory exists and is accessible..." -ForegroundColor Cyan
+
+if (-Not (Test-Path -Path "mlflow_data")) {
+    New-Item -Path "mlflow_data" -ItemType Directory | Out-Null
+}
+icacls .\mlflow_data /grant "Everyone:(OI)(CI)F" | Out-Null
+Remove-Item .\mlflow_data\mlflow.db -ErrorAction SilentlyContinue
+
 Write-Host "Building API Docker image..." -ForegroundColor Cyan
 docker build -t $DockerUsername/california-housing-ml-api:latest -f Dockerfile.api .
 
