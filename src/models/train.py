@@ -30,7 +30,7 @@ class ModelTrainer:
     
     def __init__(self, experiment_name="california_housing_prediction"):
         self.experiment_name = experiment_name
-    self.setup_mlflow()
+        self.setup_mlflow()
         
     def setup_mlflow(self):
         """Setup MLflow experiment and tracking URI."""
@@ -40,6 +40,14 @@ class ModelTrainer:
             with open("params.yaml", "r") as f:
                 params = yaml.safe_load(f)
             tracking_uri = params.get("training", {}).get("mlflow_tracking_uri", "postgresql://mlflow:mlflow@postgres:5432/mlflow")
+
+        # Dynamically switch host for local vs Docker
+        # Use 'postgres' in Docker, 'localhost' locally
+        if "postgresql://mlflow:mlflow@postgres:5432/mlflow" in tracking_uri:
+            # If running locally (not in Docker), switch to localhost
+            if not os.path.exists("/.dockerenv"):
+                tracking_uri = tracking_uri.replace("@postgres:", "@localhost:")
+
         mlflow.set_tracking_uri(tracking_uri)
         mlflow.set_experiment(self.experiment_name)
         logger.info(f"MLflow tracking URI set to: {tracking_uri}")
