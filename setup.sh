@@ -12,7 +12,7 @@ check_python() {
     elif command -v python &> /dev/null; then
         PYTHON_CMD="python"
     else
-        echo "❌ Python not found. Please install Python 3.9+"
+    echo "❌ Python not found. Please install Python 3.13+"
         exit 1
     fi
     

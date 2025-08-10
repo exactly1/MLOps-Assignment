@@ -6,7 +6,7 @@ A complete MLOps pipeline for predicting California housing prices using best pr
 
 This project implements a complete MLOps pipeline with the following components:
 
-- **Data Versioning**: DVC for dataset management
+- **Data Versioning**: (none)
 - **Experiment Tracking**: MLflow for model versioning and metrics
 - **API Service**: FastAPI for model serving
 - **Containerization**: Docker for deployment

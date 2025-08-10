@@ -7,7 +7,7 @@ This project implements a complete MLOps pipeline for California Housing price p
 ### Technology Stack
 - **Data & ML**: Scikit-learn, Pandas, NumPy
 - **Experiment Tracking**: MLflow
-- **Data Versioning**: DVC (optional)
+- **Data Versioning**: (none)
 - **API Framework**: FastAPI with Pydantic validation
 - **Containerization**: Docker & Docker Compose
 - **CI/CD**: GitHub Actions
@@ -19,7 +19,7 @@ This project implements a complete MLOps pipeline for California Housing price p
 ```
 ┌─────────────────┐    ┌──────────────┐    ┌─────────────────┐
 │   Data Source   │───▶│ Data Processor│───▶│  Model Training │
-│(CA Housing API) │    │   + DVC       │    │   + MLflow      │
+│(CA Housing API) │    │               │    │   + MLflow      │
 └─────────────────┘    └──────────────┘    └─────────────────┘
                                                     │
 ┌─────────────────┐    ┌──────────────┐    ┌─────────────────┐
@@ -39,7 +39,7 @@ This project implements a complete MLOps pipeline for California Housing price p
 ✅ **Complete Implementation**
 - Clean project structure with modular design
 - California Housing dataset with preprocessing pipeline
-- DVC integration for data versioning
+  
 - Feature engineering (rooms per household, etc.)
 
 ### Part 2: Model Development & Experiment Tracking (6/6 marks)

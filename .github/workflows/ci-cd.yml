@@ -8,7 +8,7 @@ on:
 
 env:
   DOCKER_IMAGE: ${{ secrets.DOCKER_USERNAME }}/california-housing-ml
-  PYTHON_VERSION: '3.9'
+  PYTHON_VERSION: '3.13'
 
 jobs:
   lint-and-test:
@@ -118,12 +118,24 @@ jobs:
           type=sha,prefix={{branch}}-
           type=raw,value=latest,enable={{is_default_branch}}
     
-    - name: Build and push Docker image
+    - name: Build and push API Docker image
       uses: docker/build-push-action@v4
       with:
         context: .
+        file: Dockerfile.api
         push: true
-        tags: ${{ steps.meta.outputs.tags }}
+        tags: ${{ env.DOCKER_IMAGE }}-api:latest
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Build and push UI Docker image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        file: Dockerfile.ui
+        push: true
+        tags: ${{ env.DOCKER_IMAGE }}-ui:latest
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max

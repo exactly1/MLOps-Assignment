@@ -96,7 +96,7 @@ MLOps Assignment/
 ### ✅ Part 1: Repository and Data Versioning (4/4 marks)
 - [x] Clean GitHub repository structure
 - [x] California Housing dataset with preprocessing
-- [x] DVC integration for data versioning
+- [ ] (DVC integration removed)
 - [x] Feature engineering pipeline
 
 ### ✅ Part 2: Model Development & Experiment Tracking (6/6 marks)
@@ -189,7 +189,7 @@ graph LR
 ## 🔧 Technology Stack
 
 ### Core ML/Data
-- **Python 3.9+**: Core language
+- **Python 3.13**: Core language
 - **Scikit-learn**: Machine learning models
 - **Pandas/NumPy**: Data processing
 - **MLflow**: Experiment tracking & model registry
@@ -250,7 +250,7 @@ docker-compose up -d
 
 ## 🎓 Learning Outcomes Achieved
 
-✅ **Git, DVC, and MLflow** for versioning and tracking  
+✅ **Git and MLflow** for versioning and tracking  
 ✅ **REST API** packaging with Flask/FastAPI  
 ✅ **Containerization** and deployment using Docker  
 ✅ **GitHub Actions** pipeline for CI/CD  
